@@ -2,10 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
+import RelatedProducts from "../components/RelatedProducts";
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency } = useContext(ShopContext);
+  const { products, currency, addToCart } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setimage] = useState("");
   const [size, setSize] = useState("");
@@ -77,7 +78,10 @@ const Product = () => {
               ))}
             </div>
           </div>
-          <button className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700">
+          <button
+            onClick={() => addToCart(productData._id, size)}
+            className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
+          >
             ADD TO CART
           </button>
           <hr className="mt-8 sm:w-4/5" />
@@ -88,6 +92,34 @@ const Product = () => {
           </div>
         </div>
       </div>
+
+      <div className="mt-20">
+        <div className="flex">
+          <b className="border px-5 py-3 text-sm">Description</b>
+          <p className="border px-5 py-3 text-sm">Reviews</p>
+        </div>
+        <div className="flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500">
+          <p>
+            Experience all-day comfort with this premium Men’s Round Neck
+            T-shirt, crafted from 100% pure cotton for a soft, breathable feel.
+            Ideal for daily wear, its classic fit and minimalist design make it
+            a versatile addition to your wardrobe.
+          </p>
+
+          <p>
+            Designed for durability and style, this T-shirt offers a perfect
+            balance of function and fashion. Whether you're heading out or
+            lounging at home, enjoy a polished look with lasting comfort in
+            every wear.
+          </p>
+        </div>
+      </div>
+
+      <RelatedProducts
+        category={productData.category}
+        subCategory={productData.subCategory}
+        excludeId={productData._id}
+      />
     </div>
   ) : (
     <div className="opacity-0"></div>
