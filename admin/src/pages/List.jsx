@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { backendUrl, currency } from "../App";
 import axios from "axios";
+import { toast } from "react-toastify";
 const List = ({ token }) => {
   const [list, setList] = useState([]);
   const fetchList = async () => {
@@ -27,7 +28,16 @@ const List = ({ token }) => {
         { id },
         { headers: { token } }
       );
-    } catch (error) {}
+      if (response.data.success) {
+        toast.success("Product removed successfully");
+        fetchList(); // Refresh the list after removal
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to remove product");
+    }
   };
 
   useEffect(() => {
@@ -60,7 +70,10 @@ const List = ({ token }) => {
               {currency}
               {item.price}
             </p>
-            <p className="text-right md:text-center cursor-pointer text-lg">
+            <p
+              onClick={() => removeProduct(item._id)}
+              className="text-right md:text-center cursor-pointer text-lg"
+            >
               X
             </p>
           </div>
