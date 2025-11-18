@@ -47,6 +47,7 @@ const Login = () => {
         onSubmit={onSubmitHandler}
         className="w-full max-w-sm bg-white rounded-2xl shadow-lg p-8 border border-gray-100 flex flex-col gap-5 text-gray-700"
       >
+        {/* --- Header --- */}
         <div className="text-center mb-2">
           <h2 className="text-3xl font-semibold text-gray-800 mb-2">
             {currentState}
@@ -58,30 +59,29 @@ const Login = () => {
           </p>
         </div>
 
+        {/* --- Name field for Sign Up --- */}
         {currentState === "Sign Up" && (
-          <div>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              type="text"
-              placeholder="Full Name"
-              required
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
-            />
-          </div>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            type="text"
+            placeholder="Full Name"
+            required
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition"
+          />
         )}
 
-        <div>
-          <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-            placeholder="Email Address"
-            required
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
-          />
-        </div>
+        {/* --- Email --- */}
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          placeholder="Email Address"
+          required
+          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition"
+        />
 
+        {/* --- Password + eye icon --- */}
         <div className="relative">
           <input
             value={password}
@@ -89,7 +89,7 @@ const Login = () => {
             type={showPassword ? "text" : "password"}
             placeholder="Password"
             required
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition pr-10"
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition pr-10"
           />
 
           <button
@@ -137,6 +137,7 @@ const Login = () => {
           </button>
         </div>
 
+        {/* --- Actions --- */}
         <div className="flex justify-between text-xs text-gray-500">
           <span className="cursor-pointer hover:text-gray-700">
             Forgot password?
@@ -158,12 +159,30 @@ const Login = () => {
           )}
         </div>
 
+        {/* --- Submit --- */}
         <button
           type="submit"
           className="w-full mt-2 px-6 py-3 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
         >
           {currentState === "Login" ? "Sign In" : "Sign Up"}
         </button>
+
+        {/* --- Admin Access link --- */}
+        <div className="mt-8 bg-indigo-50 border border-indigo-100 rounded-lg p-4 text-gray-700 text-sm text-center">
+          <p className="font-medium text-gray-800 mb-1">Admin Access</p>
+          <p>
+            Go to{" "}
+            <a
+              href="https://ecommerce-admin-five-mu.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-indigo-600 hover:text-indigo-700 font-semibold underline underline-offset-2"
+            >
+              Admin Page
+            </a>{" "}
+            to manage products and orders.
+          </p>
+        </div>
       </form>
     </section>
   );
