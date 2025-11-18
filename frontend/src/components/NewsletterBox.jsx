@@ -6,7 +6,6 @@ const NewsLetterBox = () => {
 
   return (
     <section className="relative overflow-hidden px-6 py-16 sm:py-20 bg-gradient-to-br from-indigo-50 via-white to-pink-50 text-center">
-      {/* headline */}
       <h2 className="text-3xl sm:text-4xl font-semibold text-gray-800">
         Subscribe & Enjoy <span className="text-indigo-600">20% Off</span>
       </h2>
