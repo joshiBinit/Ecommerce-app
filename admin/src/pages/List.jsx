@@ -1,41 +1,43 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { backendUrl, currency } from "../App";
 import axios from "axios";
 import { toast } from "react-toastify";
+
 const List = ({ token }) => {
   const [list, setList] = useState([]);
+
   const fetchList = async () => {
     try {
-      const response = await axios.get(backendUrl + "/api/product/list", {
+      const { data } = await axios.get(`${backendUrl}/api/product/list`, {
         headers: { token },
       });
-      if (response.data.success) {
-        setList(response.data.products);
+
+      if (data.success) {
+        setList(data.products);
       } else {
-        toast.error(response.data.message);
+        toast.error(data.message);
       }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to fetch product list");
     }
   };
 
   const removeProduct = async (id) => {
     try {
-      const response = await axios.post(
-        backendUrl + "/api/product/remove",
+      const { data } = await axios.post(
+        `${backendUrl}/api/product/remove`,
         { id },
         { headers: { token } }
       );
-      if (response.data.success) {
+      if (data.success) {
         toast.success("Product removed successfully");
-        fetchList(); // Refresh the list after removal
+        fetchList();
       } else {
-        toast.error(response.data.message);
+        toast.error(data.message);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error(err);
       toast.error("Failed to remove product");
     }
   };
@@ -43,43 +45,60 @@ const List = ({ token }) => {
   useEffect(() => {
     fetchList();
   }, []);
+
   return (
-    <>
-      <p className="mb-2">All Products List</p>
-      <div className="flex flex-col gap-2">
-        {/* Display the list of products */}
-        <div className="hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center py-1 px-2 border bg-gray-100 text-sm">
-          <b>Image</b>
-          <b>Name</b>
-          <b>Category</b>
-          <b>Price</b>
-          <b className="text-center">Action</b>
+    <section className="w-full">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        Product List
+      </h2>
+
+      <div className="overflow-x-auto bg-white shadow-md border border-gray-100 rounded-lg">
+        {/* Header row */}
+        <div className="hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center text-sm font-semibold text-gray-700 bg-gray-100 px-4 py-3 border-b border-gray-200">
+          <span>Image</span>
+          <span>Name</span>
+          <span>Category</span>
+          <span>Price</span>
+          <span className="text-center">Action</span>
         </div>
 
-        {/* Product List */}
-
-        {list.map((item, index) => (
-          <div
-            className="grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-2 py-1 px-2 border text-sm"
-            key={index}
-          >
-            <img className="w-12" src={item.image[0]} alt="" />
-            <p>{item.name}</p>
-            <p>{item.category}</p>
-            <p>
-              {currency}
-              {item.price}
-            </p>
-            <p
-              onClick={() => removeProduct(item._id)}
-              className="text-right md:text-center cursor-pointer text-lg"
+        {/* Product list */}
+        {list.length === 0 ? (
+          <p className="py-8 text-center text-sm text-gray-500">
+            No products found.
+          </p>
+        ) : (
+          list.map((item) => (
+            <div
+              key={item._id}
+              className="grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center text-sm text-gray-700 px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors"
             >
-              X
-            </p>
-          </div>
-        ))}
+              <img
+                src={item.image[0]}
+                alt={item.name}
+                className="w-14 h-14 object-cover rounded-md border border-gray-200"
+              />
+              <p className="truncate">{item.name}</p>
+              <p className="capitalize">{item.category}</p>
+              <p className="text-indigo-700 font-medium">
+                {currency}
+                {item.price}
+              </p>
+
+              <div className="flex justify-end md:justify-center">
+                <button
+                  onClick={() => removeProduct(item._id)}
+                  className="text-red-500 hover:text-red-600 font-semibold text-sm transition"
+                  title="Remove item"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
-    </>
+    </section>
   );
 };
 

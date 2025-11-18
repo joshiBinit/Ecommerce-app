@@ -27,16 +27,18 @@ const App = () => {
         <Login setToken={setToken} />
       ) : (
         <>
-          <Navbar setToken={setToken} />
-          <hr />
-          <div className="flex w-full">
+          <div className="flex">
             <Sidebar />
-            <div className="w-[70%] mx-auto ml-[max(5vw, 25px)] my-8 text-gray-600 text-base">
-              <Routes>
-                <Route path="/add" element={<Add token={token} />} />
-                <Route path="/list" element={<List token={token} />} />
-                <Route path="/orders" element={<Orders token={token} />} />
-              </Routes>
+
+            <div className="flex-1 flex flex-col sm:ml-[18%] min-h-screen">
+              <Navbar setToken={setToken} />
+              <main className="flex-1 overflow-y-auto p-6 sm:p-10">
+                <Routes>
+                  <Route path="/add" element={<Add token={token} />} />
+                  <Route path="/list" element={<List token={token} />} />
+                  <Route path="/orders" element={<Orders token={token} />} />
+                </Routes>
+              </main>
             </div>
           </div>
         </>

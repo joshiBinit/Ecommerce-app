@@ -3,37 +3,104 @@ import { assets } from "../assets/assets";
 
 const Footer = () => {
   return (
-    <div>
-      <div className="flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-40 text-sm">
+    <footer className="relative bg-gray-900 text-gray-300 pt-16 pb-8 px-6 sm:px-10 lg:px-20">
+      {/* top content */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-12 border-b border-gray-700 pb-12">
+        {/* company info */}
         <div>
-          <img src={assets.logo} className="mb-5 w-32" alt="" />
-          <p className="w-full md:w-2/3 text-gray-600">
-            © 2025 Forever. All rights reserved. | Privacy Policy | Terms of
-            Service
+          <img
+            src={assets.logo}
+            alt="Logo"
+            className="w-36 mb-5 brightness-200"
+          />
+          <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
+            Elevate your everyday style with timeless pieces designed for
+            versatility and confidence.
           </p>
+          <div className="flex gap-4 mt-5">
+            <a
+              href="#"
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-indigo-600 transition-colors"
+              title="Facebook"
+            >
+              <i className="fa-brands fa-facebook-f text-white text-xs"></i>
+            </a>
+            <a
+              href="#"
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-indigo-600 transition-colors"
+              title="Instagram"
+            >
+              <i className="fa-brands fa-instagram text-white text-xs"></i>
+            </a>
+            <a
+              href="#"
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-indigo-600 transition-colors"
+              title="Twitter"
+            >
+              <i className="fa-brands fa-x-twitter text-white text-xs"></i>
+            </a>
+          </div>
         </div>
+
+        {/* company links */}
         <div>
-          <p className="text-xl font-medium mb-5">COMPANY</p>
-          <ul className="flex flex-col gap-1 text-gray-600">
-            <li>Home</li>
-            <li>About Us</li>
-            <li>Delivery</li>
-            <li>Privacy Policy</li>
+          <h3 className="text-lg font-semibold text-white mb-4">Company</h3>
+          <ul className="space-y-2 text-sm">
+            <li>
+              <a href="#" className="hover:text-white transition-colors">
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-white transition-colors">
+                About Us
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-white transition-colors">
+                Delivery
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-white transition-colors">
+                Privacy Policy
+              </a>
+            </li>
           </ul>
         </div>
+
+        {/* contact info */}
         <div>
-          <p className="text-xl font-medium mb-5">GET IN TOUCH</p>
-          <ul className="flex flex-col gap-1 text-gray-600">
-            <li>+977 9818168488</li>
-            <li>joshibinit8488@gmail.com</li>
+          <h3 className="text-lg font-semibold text-white mb-4">
+            Get in Touch
+          </h3>
+          <ul className="space-y-2 text-sm">
+            <li>
+              <span className="text-gray-400">Phone:</span>{" "}
+              <a href="tel:+9779818168488" className="hover:text-white">
+                +977 9818168488
+              </a>
+            </li>
+            <li>
+              <span className="text-gray-400">Email:</span>{" "}
+              <a
+                href="mailto:joshibinit8488@gmail.com"
+                className="hover:text-white truncate"
+              >
+                joshibinit8488@gmail.com
+              </a>
+            </li>
           </ul>
         </div>
       </div>
-      <div>
-        <hr />
-        <p className="py-5 text-sm text-center">Copyright 2025</p>
+
+      <div className="text-center text-xs text-gray-500 mt-6">
+        <p>© NepBuy</p>
       </div>
-    </div>
+
+      <div className="absolute top-0 left-0 w-72 h-72 bg-indigo-500 opacity-10 blur-[150px] pointer-events-none rounded-full"></div>
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-pink-400 opacity-10 blur-[150px] pointer-events-none rounded-full"></div>
+    </footer>
   );
 };
 

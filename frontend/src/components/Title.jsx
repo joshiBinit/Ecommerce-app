@@ -1,13 +1,22 @@
 import React from "react";
 
-const Title = ({ text1, text2 }) => {
+const Title = ({ text1, text2, align = "center" }) => {
   return (
-    <div className="inline-flex gap-2 items-center mb-3">
-      <p className="text-gray-500">
-        <span>{text1}</span>
-        <span className="text-gray-700 font-medium ml-2">{text2}</span>
-      </p>
-      <p className="w-8 sm:w-12 h-[2px] sm:h-[2px] bg-gray-700"></p>
+    <div
+      className={`inline-flex items-center gap-3 mb-4 ${
+        align === "center" ? "justify-center" : ""
+      }`}
+    >
+      <h2
+        className="text-2xl sm:text-3xl font-semibold tracking-wide text-gray-800"
+        style={{ fontFamily: "Prata, serif" }}
+      >
+        <span className="text-gray-400">{text1}</span>{" "}
+        <span className="text-indigo-600">{text2}</span>
+      </h2>
+
+      {/* accent line */}
+      <span className="w-10 sm:w-12 h-[2.5px] bg-indigo-600 rounded-full"></span>
     </div>
   );
 };

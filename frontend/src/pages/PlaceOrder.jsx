@@ -3,24 +3,22 @@ import axios from "axios";
 import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
 import { useNavigate } from "react-router-dom";
-
 import { assets } from "../assets/assets";
 import { ShopContext } from "../context/ShopContext";
 
 const PlaceOrder = () => {
   const [method, setMethod] = useState("cod");
   const navigate = useNavigate();
-
   const {
     backendUrl,
     token,
+    products,
     cartItems,
     setCartitems,
     getCartAmount,
     delivery_fee,
-    products,
-    getUserCart,
   } = useContext(ShopContext);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -32,215 +30,234 @@ const PlaceOrder = () => {
     country: "",
     phone: "",
   });
-  const onChangeHandler = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
 
+  const onChangeHandler = (e) => {
+    const { name, value } = e.target;
     setFormData((data) => ({ ...data, [name]: value }));
   };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-      let orderItems = [];
-      for (const items in cartItems) {
-        for (const item in cartItems[items]) {
-          if (cartItems[items][item] > 0) {
-            const itemInfo = structuredClone(
-              products.find((product) => product._id === items)
-            );
-            if (itemInfo) {
-              itemInfo.size = item;
-              itemInfo.quantity = cartItems[items][item];
-              orderItems.push(itemInfo);
-            }
+      const orderItems = [];
+
+      for (const id in cartItems) {
+        for (const size in cartItems[id]) {
+          if (cartItems[id][size] > 0) {
+            const itemInfo = {
+              ...products.find((p) => p._id === id),
+              size,
+              quantity: cartItems[id][size],
+            };
+            orderItems.push(itemInfo);
           }
         }
       }
-      let orderData = {
+
+      const orderData = {
         address: formData,
         items: orderItems,
         amount: getCartAmount() + delivery_fee,
       };
-      switch (method) {
-        //api calls for COD
-        case "cod":
-          const response = await axios.post(
-            backendUrl + "/api/order/place",
-            orderData,
-            { headers: { token } }
-          );
-          console.log(response.data);
 
-          if (response.data.success) {
-            setCartitems({});
-            navigate("/orders");
-          } else {
-            toast.error(response.data.message);
-          }
-          break;
-
-        default:
-          break;
+      if (method === "cod") {
+        const { data } = await axios.post(
+          `${backendUrl}/api/order/place`,
+          orderData,
+          { headers: { token } }
+        );
+        if (data.success) {
+          setCartitems({});
+          navigate("/orders");
+        } else {
+          console.error(data.message);
+        }
       }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+    } catch (err) {
+      console.error(err);
     }
   };
 
   return (
-    <form
-      onSubmit={onSubmitHandler}
-      className="flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t"
-    >
-      <div className="flex flex-col gap-4 w-full sm:max-w-[480px]">
-        <div className="text-xl sm:text-2xl my-3">
-          <Title text1={"DELIVERY"} text2={"INFORMATION"} />
-        </div>
-        <div className="flex gap-3">
-          <input
-            onChange={onChangeHandler}
-            name="firstName"
-            value={formData.firstName}
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            type="text"
-            placeholder="First name"
-            required
-          />
-          <input
-            onChange={onChangeHandler}
-            name="lastName"
-            value={formData.lastName}
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            type="text"
-            placeholder="Last name"
-            required
-          />
-        </div>
-        <input
-          onChange={onChangeHandler}
-          name="email"
-          value={formData.email}
-          className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-          type="email"
-          placeholder="Email address"
-          required
-        />
-        <input
-          onChange={onChangeHandler}
-          name="street"
-          value={formData.street}
-          className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-          type="text"
-          placeholder="Street"
-          required
-        />
-        <div className="flex gap-3">
-          <input
-            onChange={onChangeHandler}
-            name="city"
-            value={formData.city}
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            type="text"
-            placeholder="City"
-            required
-          />
-          <input
-            onChange={onChangeHandler}
-            name="state"
-            value={formData.state}
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            type="text"
-            placeholder="State"
-            required
-          />
-        </div>
-        <div className="flex gap-3">
-          <input
-            onChange={onChangeHandler}
-            name="zipcode"
-            value={formData.zipcode}
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            type="number"
-            placeholder="ZIP code"
-            required
-          />
-          <input
-            onChange={onChangeHandler}
-            name="country"
-            value={formData.country}
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            type="text"
-            placeholder="Country"
-            required
-          />
-        </div>
-        <input
-          onChange={onChangeHandler}
-          name="phone"
-          value={formData.phone}
-          className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-          type="number"
-          placeholder="Phone"
-          required
-        />
-      </div>
+    <section className="border-t border-gray-200 pt-14 px-6 sm:px-10 lg:px-16 bg-gradient-to-b from-white via-gray-50 to-white">
+      <form
+        onSubmit={onSubmitHandler}
+        className="flex flex-col lg:flex-row justify-between gap-8"
+      >
+        {/* Left Section - Delivery Details */}
+        <div className="w-full lg:max-w-lg bg-white border border-gray-100 shadow-sm rounded-xl p-8 space-y-5">
+          <div className="mb-4">
+            <Title text1="DELIVERY" text2="INFORMATION" align="left" />
+          </div>
 
-      <div className="mt-8">
-        <div className="mt-8 min-w-80">
-          <CartTotal />
+          <div className="flex gap-4">
+            <input
+              name="firstName"
+              value={formData.firstName}
+              onChange={onChangeHandler}
+              placeholder="First Name"
+              required
+              className="w-1/2 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            />
+            <input
+              name="lastName"
+              value={formData.lastName}
+              onChange={onChangeHandler}
+              placeholder="Last Name"
+              required
+              className="w-1/2 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            />
+          </div>
+
+          <input
+            name="email"
+            value={formData.email}
+            onChange={onChangeHandler}
+            placeholder="Email Address"
+            type="email"
+            required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+          />
+
+          <input
+            name="street"
+            value={formData.street}
+            onChange={onChangeHandler}
+            placeholder="Street Address"
+            required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+          />
+
+          <div className="flex gap-4">
+            <input
+              name="city"
+              value={formData.city}
+              onChange={onChangeHandler}
+              placeholder="City"
+              required
+              className="w-1/2 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            />
+            <input
+              name="state"
+              value={formData.state}
+              onChange={onChangeHandler}
+              placeholder="State"
+              required
+              className="w-1/2 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            />
+          </div>
+
+          <div className="flex gap-4">
+            <input
+              name="zipcode"
+              value={formData.zipcode}
+              onChange={onChangeHandler}
+              placeholder="ZIP Code"
+              type="number"
+              required
+              className="w-1/2 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            />
+            <input
+              name="country"
+              value={formData.country}
+              onChange={onChangeHandler}
+              placeholder="Country"
+              required
+              className="w-1/2 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            />
+          </div>
+
+          <input
+            name="phone"
+            value={formData.phone}
+            onChange={onChangeHandler}
+            placeholder="Phone Number"
+            type="number"
+            required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+          />
         </div>
-        <div className="mt-12">
-          <Title text1={"PAYMENT"} text2={"METHOD"} />
-          <div className="flex gap-3 flex-col lg:flex-row">
-            <div
-              onClick={() => setMethod("stripe")}
-              className="flex items-center gap-3 border p-2 px-3 cursor-pointer"
-            >
-              <p
-                className={`min-w-3.5 h-3.5 border rounded-full ${
-                  method === "stripe" ? "bg-green-400" : ""
+
+        {/* Right Section - Summary + Payment */}
+        <div className="flex-1 flex flex-col gap-10">
+          <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-6">
+            <CartTotal />
+          </div>
+
+          <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-6">
+            <Title text1="PAYMENT" text2="METHOD" align="left" />
+            <div className="mt-5 flex flex-col sm:flex-row gap-4">
+              <div
+                onClick={() => setMethod("stripe")}
+                className={`flex items-center gap-3 border rounded-lg px-3 py-2 cursor-pointer transition ${
+                  method === "stripe"
+                    ? "border-indigo-500 bg-indigo-50"
+                    : "hover:border-gray-400"
                 }`}
-              ></p>
-              <img className="h-5 mx-4" src={assets.stripe_logo} alt="" />
+              >
+                <span
+                  className={`inline-block w-3.5 h-3.5 rounded-full border ${
+                    method === "stripe" ? "bg-green-400 border-green-400" : ""
+                  }`}
+                ></span>
+                <img
+                  src={assets.stripe_logo}
+                  alt="Stripe"
+                  className="h-5 ml-2"
+                />
+              </div>
+
+              <div
+                onClick={() => setMethod("razorpay")}
+                className={`flex items-center gap-3 border rounded-lg px-3 py-2 cursor-pointer transition ${
+                  method === "razorpay"
+                    ? "border-indigo-500 bg-indigo-50"
+                    : "hover:border-gray-400"
+                }`}
+              >
+                <span
+                  className={`inline-block w-3.5 h-3.5 rounded-full border ${
+                    method === "razorpay" ? "bg-green-400 border-green-400" : ""
+                  }`}
+                ></span>
+                <img
+                  src={assets.razorpay_logo}
+                  alt="Razorpay"
+                  className="h-5 ml-2"
+                />
+              </div>
+
+              <div
+                onClick={() => setMethod("cod")}
+                className={`flex items-center gap-3 border rounded-lg px-3 py-2 cursor-pointer transition ${
+                  method === "cod"
+                    ? "border-indigo-500 bg-indigo-50"
+                    : "hover:border-gray-400"
+                }`}
+              >
+                <span
+                  className={`inline-block w-3.5 h-3.5 rounded-full border ${
+                    method === "cod" ? "bg-green-400 border-green-400" : ""
+                  }`}
+                ></span>
+                <span className="text-gray-700 text-sm font-medium">
+                  Cash on Delivery
+                </span>
+              </div>
             </div>
-            <div
-              onClick={() => setMethod("razorpay")}
-              className="flex items-center gap-3 border p-2 px-3 cursor-pointer"
-            >
-              <p
-                className={`min-w-3.5 h-3.5 border rounded-full ${
-                  method === "razorpay" ? "bg-green-400" : ""
-                }`}
-              ></p>
-              <img className="h-5 mx-4" src={assets.razorpay_logo} alt="" />
-            </div>
-            <div
-              onClick={() => setMethod("cod")}
-              className="flex items-center gap-3 border p-2 px-3 cursor-pointer"
-            >
-              <p
-                className={`min-w-3.5 h-3.5 border rounded-full ${
-                  method === "cod" ? "bg-green-400" : ""
-                }`}
-              ></p>
-              <p className="text-gray-500 text-sm font-medium mx-4">
-                CASH ON DELIVERY
-              </p>
+
+            <div className="w-full text-right mt-8">
+              <button
+                type="submit"
+                className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-full px-10 py-3 shadow-sm transition-colors"
+              >
+                Place Order
+              </button>
             </div>
           </div>
-          <div className="w-full text-end mt-8">
-            <button
-              type="submit"
-              className="bg-black text-white px-16 py-3 text-sm"
-            >
-              PLACE ORDER
-            </button>
-          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </section>
   );
 };
 

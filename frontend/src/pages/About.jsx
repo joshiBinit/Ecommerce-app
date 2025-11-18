@@ -1,78 +1,89 @@
 import React from "react";
 import Title from "../components/Title";
 import { assets } from "../assets/assets";
-import NewsLetterBox from "../components/NewsletterBox";
+import NewsLetterBox from "../components/NewsLetterBox";
 
 const About = () => {
   return (
-    <div>
-      <div className="text-2xl text-center pt-8 border-t">
-        <Title text1={"ABOUT"} text2={"US"} />
+    <section className="px-6 sm:px-10 lg:px-16">
+      {/* Intro */}
+      <div className="text-center pt-12 border-t border-gray-200">
+        <Title text1="ABOUT" text2="US" />
       </div>
-      <div className="my-10 flex flex-col md:flex-row gap-16">
+
+      {/* About Content */}
+      <div className="my-12 flex flex-col md:flex-row gap-12 md:gap-16 items-center">
         <img
-          className="w-full md:max-w-[450px]"
+          className="w-full md:w-1/2 rounded-xl object-cover shadow-md"
           src={assets.about_img}
-          alt=""
+          alt="About NepBuy"
         />
-        <div className="flex flex-col justify-center gap-6 md:w-2/4 text-gray-600">
+
+        <div className="flex flex-col justify-center gap-6 text-gray-600 md:w-1/2">
           <p>
-            Welcome to Forever, your one-stop destination for premium quality
-            products delivered with unmatched convenience. We're committed to
-            providing a seamless online shopping experience, offering curated
-            collections that cater to your lifestyle and needs.
+            Welcome to{" "}
+            <span className="font-semibold text-gray-800">NepBuy</span>, your
+            trusted destination for premium products and an effortless shopping
+            experience. We curate collections that blend style, comfort, and
+            reliability—bringing the best of modern living straight to your
+            door.
           </p>
 
           <p>
-            Founded with a passion for excellence, we prioritize customer
-            satisfaction through reliable service, secure transactions, and
-            timely delivery. Whether you're shopping for essentials or exploring
-            new trends, we're here to make every purchase simple and satisfying.
+            Founded from a passion for excellence, our focus is your
+            satisfaction. From seamless checkout to timely delivery, every step
+            is designed to make your journey intuitive, secure, and delightful.
           </p>
-          <b className="text-gray-800">Our Mission</b>
-          <p>
-            Our mission is to empower customers by offering high-quality
-            products at competitive prices, backed by exceptional service. We
-            strive to build lasting relationships through trust, innovation, and
-            a commitment to making online shopping simple, secure, and
-            satisfying for everyone.
-          </p>
+
+          <div>
+            <h3 className="text-gray-800 font-semibold text-lg mb-1">
+              Our Mission
+            </h3>
+            <p>
+              We aim to empower customers through superior products, honest
+              value, and exceptional service. By building lasting relationships
+              grounded in trust and innovation, we make online shopping secure
+              and refreshingly human.
+            </p>
+          </div>
         </div>
       </div>
-      <div className="text-xl py-4">
-        <Title text1={"WHY"} text2={"CHOOSE US "} />
+
+      {/* Why Choose Us */}
+      <div className="text-center mb-8">
+        <Title text1="WHY" text2="CHOOSE US" />
       </div>
-      <div className="flex flex-col md:flex-row text-sm mb-20">
-        <div className="border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5">
-          <b>Quality Assurance:</b>
-          <p className="text-gray-600">
-            At Forever, quality is our top priority. Every product undergoes a
-            thorough selection and inspection process to ensure it meets our
-            high standards. We partner with trusted suppliers and continuously
-            monitor customer feedback to deliver only the best to your doorstep.
-          </p>
-        </div>
-        <div className="border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5">
-          <b>Convenience</b>
-          <p className="text-gray-600">
-            We prioritize your time and comfort by offering a user-friendly
-            shopping experience, fast checkout, multiple payment options, and
-            reliable delivery services. From browsing to unboxing, every step is
-            designed to make your shopping journey smooth and hassle-free.
-          </p>
-        </div>
-        <div className="border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5">
-          <b>Exceptional Customer Service</b>
-          <p className="text-gray-600">
-            Our dedicated support team is always ready to assist you with any
-            questions, concerns, or feedback. We believe in building trust
-            through responsive communication, personalized solutions, and a
-            commitment to ensuring every customer feels valued and heard.
-          </p>
-        </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
+        {[
+          {
+            title: "Quality Assurance",
+            desc: "We inspect every item to meet the highest standards. Partnering only with trusted suppliers ensures every product delivers quality you can feel.",
+          },
+          {
+            title: "Convenience",
+            desc: "We design every interaction—from browsing to delivery—to be effortless. Multiple payment options and fast, reliable logistics keep it simple.",
+          },
+          {
+            title: "Exceptional Service",
+            desc: "Our support team is ready around the clock to help you. We believe in quick responses, thoughtful communication, and genuine care.",
+          },
+        ].map((item, i) => (
+          <div
+            key={i}
+            className="bg-white border border-gray-100 rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300"
+          >
+            <h4 className="text-gray-800 font-semibold text-lg mb-3">
+              {item.title}
+            </h4>
+            <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
       </div>
+
+      {/* Newsletter */}
       <NewsLetterBox />
-    </div>
+    </section>
   );
 };
 
